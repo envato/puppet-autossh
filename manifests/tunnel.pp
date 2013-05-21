@@ -1,11 +1,8 @@
 define autossh::tunnel (
   $ensure       = 'present',
   $user,
-  $bind_address = 'localhost',
-  $port,
-  $host         = 'localhost',
-  $hostport,
   $remote_host,
+  $ssh_options,
   $remote_user  = 'absent',
   $monitor_port = 'absent',
   $gatetime     = 'absent',
@@ -17,7 +14,7 @@ define autossh::tunnel (
 ) {
   include autossh
 
-  File { 
+  File {
     owner => 'root',
     group => 'root',
     mode  => '0644',
@@ -26,9 +23,9 @@ define autossh::tunnel (
   $real_remote_user = $remote_user ? {
       'absent' => $user,
       default => $remote_user,
-  } 
+  }
 
-  # According to the autossh documentation, using OpenSSH ServerAlive 
+  # According to the autossh documentation, using OpenSSH ServerAlive
   # options is better than using a monitor port, so we do that by default.
   if ($monitor_port == 'absent') {
     $real_monitor_port = 0
@@ -59,7 +56,7 @@ define autossh::tunnel (
       command => "/etc/init.d/autossh-tunnel-${name} stop",
       path => "/bin:/sbin:/usr/sbin:/usr/bin",
       onlyif => "test -x /etc/init.d/autossh-tunnel-${name} && test -e /var/run/autossh-tunnel-${name}.pid",
-    } 
+    }
     file { "/etc/init.d/autossh-tunnel-${name}":
       ensure => absent,
       require => Exec["autossh-tunnel-${name}_stop"],

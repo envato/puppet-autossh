@@ -26,7 +26,7 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 # AutoSSH configuration
 #
-AUTOSSH_ARGS="-M <%= real_monitor_port %> -N -L <%= bind_address %>:<%= port %>:<%= host %>:<%= hostport %> <%= ssh_extra_options %> <%= real_remote_user %>@<%= remote_host %>"
+AUTOSSH_ARGS="-M <%= real_monitor_port %> -N <%= ssh_options %> <%= ssh_extra_options %> <%= real_remote_user %>@<%= remote_host %>"
 <% if gatetime != 'absent' -%>
 AUTOSSH_GATETIME=<%= gatetime %>
 <% end -%>
@@ -83,11 +83,11 @@ do_start()
             --exec $DAEMON --background -- $AUTOSSH_ARGS \
             || return 2
 
-    # if autossh was started but bad arguments were passed to ssh, autossh will 
+    # if autossh was started but bad arguments were passed to ssh, autossh will
     # return 0 but exit after a few seconds, so we wait just a bit to make sure
     # everything is ok
     sleep 5
-    pidofproc -p "$PIDFILE" "$DAEMON" >/dev/null || return 2    
+    pidofproc -p "$PIDFILE" "$DAEMON" >/dev/null || return 2
 }
 
 #
