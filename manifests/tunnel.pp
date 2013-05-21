@@ -1,16 +1,17 @@
 define autossh::tunnel (
-  $ensure       = 'present',
+  $ensure        = 'present',
   $user,
   $remote_host,
   $ssh_options,
-  $remote_user  = 'absent',
-  $monitor_port = 'absent',
-  $gatetime     = 'absent',
-  $first_poll   = 'absent',
-  $poll         = 'absent',
-  $maxstart     = 'absent',
-  $maxlifetime  = 'absent',
-  $logfile      = 'absent'
+  $start_on_boot = true,
+  $remote_user   = 'absent',
+  $monitor_port  = 'absent',
+  $gatetime      = 'absent',
+  $first_poll    = 'absent',
+  $poll          = 'absent',
+  $maxstart      = 'absent',
+  $maxlifetime   = 'absent',
+  $logfile       = 'absent'
 ) {
   include autossh
 
@@ -48,6 +49,7 @@ define autossh::tunnel (
       ensure     => 'running',
       hasrestart => 'true',
       hasstatus  => 'true',
+      enable     => $start_on_boot,
       require    => File["/etc/init.d/autossh-tunnel-${name}"],
     }
   }

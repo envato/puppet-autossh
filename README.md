@@ -11,6 +11,7 @@ autossh::tunnel { "tunnel_name":
   remote_user   => "some_user",
   user          => "user_to_run_autossh_as",
   ssh_options   => "-L 8000:localhost:80",
+  start_on_boot => true, # Defaults to true
   # Other parameters
   monitor_port  => "See monitor port in autossh docs", # If you leave this out, it'll use OpenSSH ServerAlive which is much better,
   # Refer to the autossh docs
